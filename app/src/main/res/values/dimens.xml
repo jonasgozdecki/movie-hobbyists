@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="title">28sp</dimen>
+    <dimen name="regular">18sp</dimen>
+    <dimen name="margin_left_default">20dp</dimen>
+</resources>
