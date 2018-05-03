@@ -1,24 +1,19 @@
 package com.arctouch.codechallenge.base
 
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.arctouch.codechallenge.api.TmdbApi
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
-abstract class BaseActivity<V : BaseContract.View, P : BaseContract.Presenter<V>,
-    C : BaseContract.Component<V, P>> : AppCompatActivity(), BaseContract.View {
+abstract class BaseActivity : AppCompatActivity() {
 
-  protected val presenter: P by lazy { component.presenter() }
-  protected val component: C by lazy { createComponent() }
-
-  protected abstract fun createComponent(): C
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    presenter.attachView(this as V)
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    presenter.detachView()
-  }
-
+    protected val api: TmdbApi = Retrofit.Builder()
+        .baseUrl(TmdbApi.URL)
+        .client(OkHttpClient.Builder().build())
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .build()
+        .create(TmdbApi::class.java)
 }
